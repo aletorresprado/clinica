@@ -23,6 +23,24 @@ function HamburgerMenu() {
         ></div>
       )}
 
+      {/* Panel Lateral del Menú */}
+      <div 
+        className={`fixed top-0 right-0 w-64 h-full bg-green-200 shadow-lg transform transition-transform duration-300 ease-in-out z-50 lg:hidden
+          ${isOpen ? 'translate-x-0' : 'translate-x-full'}`} // Si está abierto, no se mueve; si está cerrado, se mueve fuera de pantalla
+      >
+        <div className="p-4 flex flex-col items-center">
+          <h2 className="text-xl font-bold mb-4">Menú</h2>
+          <ul className='flex flex-col items-center'>
+            {/* Charlar para cambar las "a" por Link */}
+            <li className="mb-2"><a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Iniciar Sesión</a></li> 
+            <li className="mb-2"><a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Registro</a></li>
+            <li className="mb-2"><a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Profecionales</a></li>
+            <li className="mb-2"><a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Acerca de</a></li>
+            <li className="mb-2"><a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Contacto</a></li>
+          </ul>
+        </div>
+      </div>
+
       
     </div>
   );
