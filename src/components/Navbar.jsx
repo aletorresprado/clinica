@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,15 @@ function HamburgerMenu() {
         </div>
       </div>
 
-      
+      {/* Contenido que siempre es visible en pantallas grandes */}
+      <nav className="hidden bg-green-200 lg:flex justify-center p-4">
+        {/* Cambiar los "a" por link */}
+        <a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Iniciar Sesión</a>
+        <a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Registro</a>
+        <a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Profecionales</a>
+        <a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Acerca de</a>
+        <a href="#" className="mx-3 font-bold text-green-600 hover:text-sky-600">Contacto</a>
+      </nav>
     </div>
   );
 }
