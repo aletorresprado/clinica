@@ -10,10 +10,23 @@ export default function LoginPaciente() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const user = pacientes.find((p) => p.email === email && p.password === password);
+    const user = pacientes.find(
+      (p) => p.email === email && p.password === password
+    );
     if (!user) return alert("Credenciales inválidas.");
-    if (user.estado === "pendiente") return alert("Tu cuenta aún no fue aprobada.");
-    navigate("/paciente/dashboard", { state: { email } });
+    if (user.estado === "pendiente")
+      return alert("Tu cuenta aún no fue aprobada.");
+
+    // ✅ Enviamos también el nombre
+    navigate("/paciente/dashboard", {
+      state: { email: user.email, nombre: user.nombre },
+    });
+
+    // ✅ (Opcional) Guardar en localStorage para mantener sesión tras recarga
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({ email: user.email, nombre: user.nombre, rol: "paciente" })
+    );
   };
 
   return (
