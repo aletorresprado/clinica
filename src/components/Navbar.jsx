@@ -15,6 +15,14 @@ function HamburgerMenu() {
         <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
       </button>
 
+      {/* Función Condicional del Botón*/}
+      {isOpen && (
+        <div 
+          onClick={() => setIsOpen(false)} 
+          className="fixed inset-0 bg-green-300 bg-opacity-25 z-40 lg:hidden" // Ocultar en pantallas grandes
+        ></div>
+      )}
+
       
     </div>
   );
