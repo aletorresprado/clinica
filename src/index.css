@@ -1,1 +1,12 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* pequeño estilo para Toasts */
+.toast-container {
+position: fixed;
+right: 1rem;
+top: 1rem;
+z-index: 60;
+}

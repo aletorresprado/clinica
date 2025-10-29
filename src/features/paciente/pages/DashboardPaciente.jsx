@@ -1,241 +1,129 @@
-// features/paciente/pages/DashboardPaciente.jsx
-import React, { useState, useEffect } from 'react';
+// src/features/paciente/pages/DashboardPaciente.jsx
+import React, { useEffect, useState } from 'react';
+import useAuthPaciente from '../hooks/useAuthPaciente';
+import { getTurnos, addTurno, getPacientes } from '../../../services/mockService';
+import Select from '../../../components/ui/Select';
+import Input from '../../../components/ui/Input';
+import Textarea from '../../../components/ui/Textarea';
+import Button from '../../../components/ui/Button';
+import EstadoBadge from '../../../components/ui/EstadoBadge';
+import { useToast } from '../../../common/ToastProvider';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FaCalendarCheck, 
-  FaCalendarPlus, 
-  FaSignOutAlt, 
-  FaUser,
-  FaClock,
-  FaCheckCircle,
-  FaTimesCircle
-} from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import { useAuthPaciente } from '../hooks/useAuthPaciente';
-import { pacienteService } from '../services/pacienteService';
 
-const DashboardPaciente = () => {
-  const [pacienteData, setPacienteData] = useState(null);
+const MEDICOS_POR_ESPECIALIDAD = {
+  'Cardiología': ['Dr. Pérez', 'Dr. Gómez'],
+  'Pediatría': ['Dra. López', 'Dra. Díaz'],
+  'Traumatología': ['Dr. Ruiz', 'Dr. Fernández'],
+  'General': ['Dr. Molina', 'Dra. Torres']
+};
+
+export default function DashboardPaciente() {
+  const { user, logout } = useAuthPaciente();
   const [turnos, setTurnos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { logoutPaciente } = useAuthPaciente();
+  const [especialidad, setEspecialidad] = useState('');
+  const [medico, setMedico] = useState('');
+  const [fecha, setFecha] = useState('');
+  const [hora, setHora] = useState('');
+  const [motivo, setMotivo] = useState('');
+  const { push } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadPacienteData();
-    loadTurnos();
+    cargarTurnos();
   }, []);
 
-  const loadPacienteData = () => {
-    const data = localStorage.getItem('pacienteData');
-    if (data) {
-      setPacienteData(JSON.parse(data));
+  async function cargarTurnos() {
+    try {
+      const all = await getTurnos();
+      const mios = all.filter((t) => t.pacienteId === (user?.id ?? JSON.parse(localStorage.getItem('clinica_session_paciente_v1') || 'null')?.id));
+      setTurnos(mios || []); // Asegurar que siempre sea un array
+    } catch (error) {
+      console.error('Error cargando turnos:', error);
+      setTurnos([]); // En caso de error, establecer array vacío
     }
-  };
-
-  const loadTurnos = async () => {
-  try {
-    // ✅ Usar datos de localStorage en lugar de API
-    const turnosGuardados = localStorage.getItem('turnosPaciente');
-    if (turnosGuardados) {
-      setTurnos(JSON.parse(turnosGuardados));
-    } else {
-      setTurnos([]); // No hay turnos
-    }
-  } catch (error) {
-    toast.error('Error al cargar los turnos');
-  } finally {
-    setLoading(false);
   }
-};
 
-  const handleLogout = () => {
-    logoutPaciente();
-    /* navigate('/paciente/login'); */
-  };
+  async function handleSolicitar(e) {
+    e.preventDefault();
+    if (!especialidad || !medico || !fecha || !hora) {
+      push('Complete los campos obligatorios');
+      return;
+    }
+    try {
+      await addTurno({
+        pacienteId: user?.id ?? JSON.parse(localStorage.getItem('clinica_session_paciente_v1') || 'null')?.id,
+        medicoId: medico,
+        fecha,
+        hora,
+        especialidad,
+        motivo
+      });
+      push('Turno solicitado (pendiente)');
+      setEspecialidad('');
+      setMedico('');
+      setFecha('');
+      setHora('');
+      setMotivo('');
+      await cargarTurnos();
+    } catch (error) {
+      console.error('Error solicitando turno:', error);
+      push('Error al solicitar turno');
+    }
+  }
 
-  const getEstadoBadge = (estado) => {
-    const estados = {
-      pendiente: { color: 'bg-yellow-100 text-yellow-800', icon: FaClock },
-      aprobado: { color: 'bg-green-100 text-green-800', icon: FaCheckCircle },
-      cancelado: { color: 'bg-red-100 text-red-800', icon: FaTimesCircle },
-      rechazado: { color: 'bg-red-100 text-red-800', icon: FaTimesCircle }
-    };
-    
-    const config = estados[estado] || estados.pendiente;
-    const Icon = config.icon;
-    
-    return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
-        <Icon className="mr-1" />
-        {estado.charAt(0).toUpperCase() + estado.slice(1)}
-      </span>
-    );
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+  if (!user) {
+    return <div>Cargando...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <FaUser className="text-2xl text-blue-600 mr-3" />
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">
-                  Hola, {pacienteData?.nombre} {pacienteData?.apellido}
-                </h1>
-                <p className="text-sm text-gray-500">Panel del Paciente</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <FaSignOutAlt className="mr-2" />
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 px-4 sm:px-0">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <FaCalendarCheck className="h-6 w-6 text-gray-400" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Turnos Totales
-                    </dt>
-                    <dd className="text-lg font-semibold text-gray-900">
-                      {turnos.length}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <FaCheckCircle className="h-6 w-6 text-green-400" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Turnos Aprobados
-                    </dt>
-                    <dd className="text-lg font-semibold text-gray-900">
-                      {turnos.filter(t => t.estado === 'aprobado').length}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <FaClock className="h-6 w-6 text-yellow-400" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Pendientes
-                    </dt>
-                    <dd className="text-lg font-semibold text-gray-900">
-                      {turnos.filter(t => t.estado === 'pendiente').length}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="mb-8 px-4 sm:px-0">
-          <button
-            onClick={() => navigate('/paciente/solicitar-turno')}
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-          >
-            <FaCalendarPlus className="mr-2" />
-            Solicitar Nuevo Turno
-          </button>
-        </div>
-
-        {/* Turnos Recientes */}
-        <div className="px-4 sm:px-0">
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Mis Turnos Recientes
-              </h3>
-              <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                Historial de turnos solicitados
-              </p>
-            </div>
-            <div className="divide-y divide-gray-200">
-              {turnos.length === 0 ? (
-                <div className="px-4 py-12 text-center">
-                  <FaCalendarCheck className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No hay turnos</h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Comienza solicitando tu primer turno médico.
-                  </p>
-                </div>
-              ) : (
-                turnos.slice(0, 5).map((turno) => (
-                  <div key={turno.id} className="px-4 py-4 sm:px-6 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                          <FaUser className="h-8 w-8 text-gray-400" />
-                        </div>
-                        <div className="ml-4">
-                          <h4 className="text-sm font-semibold text-gray-900">
-                            Dr. {turno.medicoNombre}
-                          </h4>
-                          <p className="text-sm text-gray-500">
-                            {turno.especialidad} • {new Date(turno.fecha).toLocaleDateString()} 
-                            {' '}a las {turno.hora}
-                          </p>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Motivo: {turno.motivo}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        {getEstadoBadge(turno.estado)}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold">Panel Paciente — {user.nombre}</h2>
+        <div className="flex gap-2">
+          <Button onClick={() => { logout(); push('Sesion cerrada'); navigate('/paciente/login'); }}>Cerrar sesión</Button>
         </div>
       </div>
+
+      <section className="bg-white p-4 rounded shadow">
+        <h3 className="font-semibold mb-3">Solicitar turno</h3>
+        <form onSubmit={handleSolicitar} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <Select
+            label="Especialidad"
+            value={especialidad}
+            onChange={(e) => { setEspecialidad(e.target.value); setMedico(''); }}
+            options={Object.keys(MEDICOS_POR_ESPECIALIDAD).map((s) => ({ label: s, value: s }))}
+          />
+          <Select
+            label="Médico"
+            value={medico}
+            onChange={(e) => setMedico(e.target.value)}
+            options={especialidad ? MEDICOS_POR_ESPECIALIDAD[especialidad].map((m) => ({ label: m, value: m })) : []}
+          />
+          <Input label="Fecha" type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} name="fecha" />
+          <Input label="Hora" type="time" value={hora} onChange={(e) => setHora(e.target.value)} name="hora" />
+          <Textarea label="Motivo" value={motivo} onChange={(e) => setMotivo(e.target.value)} name="motivo" />
+          <div className="md:col-span-2">
+            <Button type="submit">Solicitar</Button>
+          </div>
+        </form>
+      </section>
+
+      <section className="bg-white p-4 rounded shadow">
+        <h3 className="font-semibold mb-3">Mis turnos</h3>
+        <div className="grid gap-3">
+          {turnos?.length === 0 && <div className="text-sm text-gray-500">No tienes turnos</div>}
+          {turnos?.map((t) => ( // ✅ CORRECCIÓN APLICADA AQUÍ
+            <div key={t.id} className="flex items-center justify-between border p-2 rounded">
+              <div>
+                <div className="font-medium">{t.especialidad} — {t.medicoId}</div>
+                <div className="text-xs text-gray-600">{t.fecha} {t.hora}</div>
+                <div className="text-sm mt-1">{t.motivo}</div>
+              </div>
+              <EstadoBadge estado={t.estado} />
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
-};
-
-export default DashboardPaciente;
+}

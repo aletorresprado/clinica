@@ -1,61 +1,54 @@
-// App.jsx (ejemplo de configuración)
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-// Paciente Pages
+// src/App.jsx
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Header from './common/Header';
+import PrivateRoute from './common/PrivateRoute';
+import LoginAdmin from './features/admin/pages/LoginAdmin';
+import DashboardAdmin from './features/admin/pages/DashboardAdmin';
 import LoginPaciente from './features/paciente/pages/LoginPaciente';
 import RegisterPaciente from './features/paciente/pages/RegisterPaciente';
 import DashboardPaciente from './features/paciente/pages/DashboardPaciente';
-import SolicitarTurno from './features/paciente/pages/SolicitarTurno';
-import TurnosPaciente from './features/paciente/pages/TurnosPaciente';
+import { initMockData } from './services/mockService';
 
-// Components
-import ProtectedRoute from './components/ProtectedRoute';
+export default function App() {
+  useEffect(() => {
+    initMockData(); // Inicializa arrays en LocalStorage si no existen
+  }, []);
 
-
-function App() {
   return (
-    <Router>
-      <div className="App">
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <main className="container mx-auto p-4">
         <Routes>
-          {/* Rutas públicas paciente */}
+          <Route path="/" element={<Navigate to="/paciente/login" />} />
+
+          {/* Paciente */}
           <Route path="/paciente/login" element={<LoginPaciente />} />
           <Route path="/paciente/register" element={<RegisterPaciente />} />
-          
-          {/* Rutas protegidas paciente */}
-          <Route 
-            path="/paciente/dashboard" 
+          <Route
+            path="/paciente/dashboard"
             element={
-              <ProtectedRoute>
+              <PrivateRoute role="paciente">
                 <DashboardPaciente />
-              </ProtectedRoute>
-            } 
+              </PrivateRoute>
+            }
           />
-          <Route 
-            path="/paciente/solicitar-turno" 
+
+          {/* Admin */}
+          <Route path="/admin/login" element={<LoginAdmin />} />
+          <Route
+            path="/admin/dashboard"
             element={
-              <ProtectedRoute>
-                <SolicitarTurno />
-              </ProtectedRoute>
-            } 
+              <PrivateRoute role="admin">
+                <DashboardAdmin />
+              </PrivateRoute>
+            }
           />
-          <Route 
-            path="/paciente/turnos" 
-            element={
-              <ProtectedRoute>
-                <TurnosPaciente />
-              </ProtectedRoute>
-            } 
-          />
-          
-          {/* Ruta por defecto */}
-          <Route path="/" element={<LoginPaciente />} />
+
+          <Route path="*" element={<div>404 - Página no encontrada</div>} />
         </Routes>
-      </div>
-    </Router>
+      </main>
+    </div>
   );
 }
 
-export default App; // ✅ ESTA LÍNEA ES CRÍTICA

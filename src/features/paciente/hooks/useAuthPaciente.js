@@ -1,73 +1,38 @@
-// features/paciente/hooks/useAuthPaciente.js (actualizado)
+// src/features/paciente/hooks/useAuthPaciente.js
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ Agregar useNavigate
-import { pacienteService } from '../services/pacienteService';
-import { mockPacienteService } from '../services/mockPacienteService';
-import { toast } from 'react-toastify';
+import { findPacienteByEmail } from '../../../services/mockService';
 
-const USE_MOCK = true;
-const service = USE_MOCK ? mockPacienteService : pacienteService;
+const LS_SESSION = 'clinica_session_paciente_v1';
 
-export const useAuthPaciente = () => {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // ✅ Inicializar navigate
+export function isPacienteLogged() {
+  const s = localStorage.getItem(LS_SESSION);
+  return !!s;
+}
 
-  const registerPaciente = async (data) => {
-    setLoading(true);
-    try {
-      const response = await service.register(data);
-      toast.success('Registro exitoso. Espera la aprobación del administrador.');
-      
-      // ✅ Redirigir al login después de 2 segundos
-      setTimeout(() => {
-        navigate('/paciente/login');
-      }, 2000);
-      
-      return response;
-    } catch (error) {
-      const message = error.response?.data?.message || 'Error en el registro';
-      toast.error(message);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function useAuthPaciente() {
+  const [user, setUser] = useState(() => {
+    const raw = localStorage.getItem(LS_SESSION);
+    return raw ? JSON.parse(raw) : null;
+  });
 
-  const loginPaciente = async (credentials) => {
-    setLoading(true);
-    try {
-      const response = await service.login(credentials);
-      
-      if (response.success) {
-        localStorage.setItem('pacienteToken', response.token);
-        localStorage.setItem('pacienteData', JSON.stringify(response.paciente));
-        toast.success('Inicio de sesión exitoso');
-        
-        // ✅ Redirigir al dashboard inmediatamente
-        navigate('/paciente/dashboard');
-      }
-      
-      return response;
-    } catch (error) {
-      const message = error.response?.data?.message || 'Error en el login';
-      toast.error(message);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
+  async function login(email, password) {
+    const p = await findPacienteByEmail(email);
+    if (!p || p.password !== password) throw new Error('Credenciales inválidas');
+    if (p.estado !== 'aprobado') throw new Error(`Cuenta no aprobada: ${p.estado}`);
+    localStorage.setItem(LS_SESSION, JSON.stringify(p));
+    setUser(p);
+    return p;
+  }
 
-  const logoutPaciente = () => {
-    localStorage.removeItem('pacienteToken');
-    localStorage.removeItem('pacienteData');
-    toast.info('Sesión cerrada');
-    navigate('/paciente/login'); // ✅ Redirigir al login después del logout
-  };
+  function logout() {
+    localStorage.removeItem(LS_SESSION);
+    setUser(null);
+  }
 
-  return {
-    loading,
-    registerPaciente,
-    loginPaciente,
-    logoutPaciente
-  };
-};
+  function setSessionFromPaciente(paciente) {
+    localStorage.setItem(LS_SESSION, JSON.stringify(paciente));
+    setUser(paciente);
+  }
+
+  return { user, login, logout, setSessionFromPaciente };
+}

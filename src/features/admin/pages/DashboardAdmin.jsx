@@ -1,214 +1,91 @@
-import { useData } from "../../../context/DataContext";
-import { useState } from "react";
-import { toast } from "react-toastify";
+// src/features/admin/pages/DashboardAdmin.jsx
+import React, { useEffect, useState } from 'react';
+import useAuthAdmin from '../hooks/useAuthAdmin';
+import { getPacientes, updatePacienteEstado, getTurnos, updateTurnoEstado } from '../../../services/mockService';
+import Button from '../../../components/ui/Button';
+import EstadoBadge from '../../../components/ui/EstadoBadge';
+import { useToast } from '../../../common/ToastProvider';
 
 export default function DashboardAdmin() {
-  const {
-    pacientes,
-    turnos,
-    aprobarPaciente,
-    aprobarTurno,
-    cancelarTurno,
-  } = useData();
+  const { logout } = useAuthAdmin();
+  const [pacientes, setPacientes] = useState([]);
+  const [turnos, setTurnos] = useState([]);
+  const { push } = useToast();
 
-  const [tab, setTab] = useState("pacientes");
+  async function loadAll() {
+    const ps = await getPacientes();
+    const ts = await getTurnos();
+    setPacientes(ps);
+    setTurnos(ts);
+  }
 
-  // 👉 Aprobación de pacientes
-  const handleAprobarPaciente = (email) => {
-    aprobarPaciente(email);
-    toast.success(`Paciente ${email} aprobado correctamente`);
-  };
+  useEffect(() => {
+    loadAll();
+  }, []);
 
-  // 👉 Aprobación de turnos
-  const handleAprobarTurno = (id) => {
-    aprobarTurno(id);
-    toast.success(`Turno ${id} aprobado correctamente`);
-  };
+  async function changePacienteEstado(id, estado) {
+    await updatePacienteEstado(id, estado);
+    push(`Paciente ${estado}`);
+    await loadAll();
+  }
 
-  // 👉 Cancelación de turnos
-  const handleCancelarTurno = (id) => {
-    cancelarTurno(id);
-    toast.info(`Turno ${id} cancelado`);
-  };
+  async function changeTurnoEstado(id, estado) {
+    await updateTurnoEstado(id, estado);
+    push(`Turno ${estado}`);
+    await loadAll();
+  }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-6 text-blue-700">
-        Panel de Administración
-      </h1>
-
-      {/* Tabs */}
-      <div className="flex justify-center gap-4 mb-8">
-        <button
-          onClick={() => setTab("pacientes")}
-          className={`px-4 py-2 rounded-lg transition ${
-            tab === "pacientes"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Pacientes
-        </button>
-        <button
-          onClick={() => setTab("turnos")}
-          className={`px-4 py-2 rounded-lg transition ${
-            tab === "turnos"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Turnos
-        </button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold">Panel Administrador</h2>
+        <Button onClick={() => { logout(); push('Sesión cerrada'); }}>Cerrar sesión</Button>
       </div>
 
-      {/* --- PACIENTES --- */}
-      {tab === "pacientes" && (
-        <div className="bg-white rounded-2xl shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Pacientes pendientes</h2>
-          {pacientes.filter((p) => p.estado === "pendiente").length === 0 ? (
-            <p className="text-gray-600">No hay pacientes pendientes.</p>
-          ) : (
-            <ul className="space-y-3">
-              {pacientes
-                .filter((p) => p.estado === "pendiente")
-                .map((p) => (
-                  <li
-                    key={p.email}
-                    className="flex justify-between items-center border p-3 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium">{p.nombre}</p>
-                      <p className="text-sm text-gray-500">{p.email}</p>
-                    </div>
-                    <button
-                      onClick={() => handleAprobarPaciente(p.email)}
-                      className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600"
-                    >
-                      Aprobar
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          )}
-
-          <h2 className="text-xl font-semibold mt-8 mb-4">Pacientes activos</h2>
-          {pacientes.filter((p) => p.estado === "activo").length === 0 ? (
-            <p className="text-gray-600">No hay pacientes activos.</p>
-          ) : (
-            <ul className="space-y-3">
-              {pacientes
-                .filter((p) => p.estado === "activo")
-                .map((p) => (
-                  <li
-                    key={p.email}
-                    className="flex justify-between items-center border p-3 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium">{p.nombre}</p>
-                      <p className="text-sm text-gray-500">{p.email}</p>
-                    </div>
-                    <span className="text-green-600 font-medium">Activo</span>
-                  </li>
-                ))}
-            </ul>
-          )}
-        </div>
-      )}
-
-      {/* --- TURNOS --- */}
-      {tab === "turnos" && (
-        <div className="bg-white rounded-2xl shadow-md p-6">
-          {/* Turnos pendientes */}
-          <h2 className="text-xl font-semibold mb-4">Turnos pendientes</h2>
-          {turnos.filter((t) => t.estado === "pendiente").length === 0 ? (
-            <p className="text-gray-600">No hay turnos pendientes.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-4">
-              {turnos
-                .filter((t) => t.estado === "pendiente")
-                .map((t) => (
-                  <div
-                    key={t.id}
-                    className="border rounded-xl p-4 shadow-sm bg-gray-50 flex flex-col justify-between"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-semibold text-gray-800">{t.paciente}</p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Disciplina:</span> {t.disciplina}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Profesional:</span> {t.profesional}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Fecha:</span> {t.fecha} - {t.hora}
-                      </p>
-                      {t.motivo && (
-                        <p className="text-sm text-gray-500">
-                          <span className="font-medium">Motivo:</span> {t.motivo}
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handleAprobarTurno(t.id)}
-                      className="mt-3 bg-green-600 text-white rounded-lg px-3 py-1 hover:bg-green-700"
-                    >
-                      Aprobar
-                    </button>
-                    <button
-                      onClick={() => handleCancelarTurno(t.id)}
-                      className="mt-3 bg-red-500 text-white rounded-lg px-3 py-1 hover:bg-red-600"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                ))}
+      <section className="bg-white p-4 rounded shadow">
+        <h3 className="font-semibold mb-3">Pacientes</h3>
+        <div className="grid gap-3">
+          {pacientes.length === 0 && <div className="text-sm text-gray-500">No hay pacientes</div>}
+          {pacientes.map((p) => (
+            <div key={p.id} className="flex items-center justify-between border p-2 rounded">
+              <div>
+                <div className="font-medium">{p.nombre}</div>
+                <div className="text-xs text-gray-600">{p.email}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <EstadoBadge estado={p.estado} />
+                <div className="flex gap-1">
+                  <Button onClick={() => changePacienteEstado(p.id, 'aprobado')} className="bg-green-500">Aprobar</Button>
+                  <Button onClick={() => changePacienteEstado(p.id, 'rechazado')} className="bg-red-500">Rechazar</Button>
+                </div>
+              </div>
             </div>
-          )}
-
-          {/* Turnos aprobados */}
-          <h2 className="text-xl font-semibold mt-8 mb-4">Turnos aprobados</h2>
-          {turnos.filter((t) => t.estado === "aprobado").length === 0 ? (
-            <p className="text-gray-600">No hay turnos aprobados.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-4">
-              {turnos
-                .filter((t) => t.estado === "aprobado")
-                .map((t) => (
-                  <div
-                    key={t.id}
-                    className="border rounded-xl p-4 shadow-sm bg-green-50 flex flex-col justify-between"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-semibold text-gray-800">{t.paciente}</p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Disciplina:</span> {t.disciplina}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Profesional:</span> {t.profesional}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-medium">Fecha:</span> {t.fecha} - {t.hora}
-                      </p>
-                      {t.motivo && (
-                        <p className="text-sm text-gray-500">
-                          <span className="font-medium">Motivo:</span> {t.motivo}
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handleCancelarTurno(t.id)}
-                      className="mt-3 bg-red-500 text-white rounded-lg px-3 py-1 hover:bg-red-600"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                ))}
-            </div>
-          )}
+          ))}
         </div>
-      )}
+      </section>
+
+      <section className="bg-white p-4 rounded shadow">
+        <h3 className="font-semibold mb-3">Turnos</h3>
+        <div className="grid gap-3">
+          {turnos.length === 0 && <div className="text-sm text-gray-500">No hay turnos</div>}
+          {turnos.map((t) => (
+            <div key={t.id} className="flex items-center justify-between border p-2 rounded">
+              <div>
+                <div className="font-medium">{t.especialidad} - {t.medicoId}</div>
+                <div className="text-xs text-gray-600">{t.fecha} {t.hora} — Paciente: {t.pacienteId}</div>
+                <div className="text-sm mt-1">{t.motivo}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <EstadoBadge estado={t.estado} />
+                <div className="flex gap-1">
+                  <Button onClick={() => changeTurnoEstado(t.id, 'aprobado')} className="bg-green-500">Aprobar</Button>
+                  <Button onClick={() => changeTurnoEstado(t.id, 'rechazado')} className="bg-red-500">Rechazar</Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,95 +1,40 @@
-// features/paciente/pages/LoginPaciente.jsx
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaStethoscope } from 'react-icons/fa';
+// src/features/paciente/pages/LoginPaciente.jsx
+import React, { useState } from 'react';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
-import { useAuthPaciente } from '../hooks/useAuthPaciente';
-import { loginPacienteSchema } from '../schemas/pacienteSchemas';
+import useAuthPaciente from '../hooks/useAuthPaciente';
+import { useNavigate, Link } from 'react-router-dom';
+import { useToast } from '../../../common/ToastProvider';
 
-const LoginPaciente = () => {
-  const { loginPaciente, loading } = useAuthPaciente();
+export default function LoginPaciente() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuthPaciente();
   const navigate = useNavigate();
-  
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    resolver: zodResolver(loginPacienteSchema)
-  });
+  const { push } = useToast();
 
-  const onSubmit = async (data) => {
+  async function handleSubmit(e) {
+    e.preventDefault();
     try {
-      await loginPaciente(data);
+      await login(email, password);
+      push('Bienvenido/a');
       navigate('/paciente/dashboard');
-    } catch (error) {
-      // El error ya se maneja en el hook
+    } catch (err) {
+      push(err.message);
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-blue-700 p-6 text-white">
-          <div className="flex items-center justify-center mb-2">
-            <FaStethoscope className="text-2xl mr-2" />
-            <h1 className="text-2xl font-bold">Ingresar como Paciente</h1>
-          </div>
-          <p className="text-green-100 text-center">
-            Accede a tu cuenta para gestionar tus turnos
-          </p>
+    <div className="max-w-md mx-auto bg-white p-6 rounded shadow">
+      <h2 className="text-xl font-semibold mb-4">Ingreso Paciente</h2>
+      <form onSubmit={handleSubmit}>
+        <Input label="Email" value={email} onChange={(e) => setEmail(e.target.value)} name="email" />
+        <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" />
+        <div className="mt-4 flex gap-2">
+          <Button type="submit">Ingresar</Button>
+          <Link to="/paciente/register" className="ml-auto text-sm text-sky-600 self-center">Registrarme</Link>
         </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-          <Input
-            label="Email"
-            type="email"
-            placeholder="tu@email.com"
-            error={errors.email?.message}
-            icon={<FaEnvelope className="text-gray-400" />}
-            {...register('email')}
-          />
-
-          <Input
-            label="Contraseña"
-            type="password"
-            placeholder="••••••••"
-            error={errors.password?.message}
-            icon={<FaLock className="text-gray-400" />}
-            {...register('password')}
-          />
-
-          <Button 
-            type="submit" 
-            loading={loading}
-            className="mt-6"
-          >
-            Iniciar Sesión
-          </Button>
-
-          <div className="text-center space-y-2 mt-4">
-            <p className="text-gray-600">
-              ¿No tienes cuenta?{' '}
-              <Link 
-                to="/paciente/register" 
-                className="text-green-600 hover:text-green-700 font-semibold transition-colors"
-              >
-                Regístrate aquí
-              </Link>
-            </p>
-            <p className="text-sm text-gray-500">
-              * Tu cuenta debe ser aprobada por un administrador
-            </p>
-          </div>
-        </form>
-      </div>
+      </form>
     </div>
   );
-};
-
-export default LoginPaciente;
+}
