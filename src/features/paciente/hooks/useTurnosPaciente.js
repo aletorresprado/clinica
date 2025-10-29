@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-// Servicio mock
+// ✅ Servicio mock COMPLETO - debe estar dentro del mismo archivo
 const mockService = {
   getMedicos: async () => {
     await new Promise(resolve => setTimeout(resolve, 600));
@@ -49,6 +49,17 @@ export const useTurnosPaciente = () => {
   const [horarios, setHorarios] = useState([]);
   const navigate = useNavigate();
 
+  // ✅ Función para obtener el paciente logueado
+  const getPacienteLogueado = () => {
+    try {
+      const pacienteData = localStorage.getItem('pacienteData');
+      return pacienteData ? JSON.parse(pacienteData) : null;
+    } catch (error) {
+      console.error('Error al obtener paciente logueado:', error);
+      return null;
+    }
+  };
+
   const getMedicos = async () => {
     setLoading(true);
     try {
@@ -91,13 +102,21 @@ export const useTurnosPaciente = () => {
   const solicitarTurno = async (turnoData) => {
     setLoading(true);
     try {
-      // Simular solicitud
+      // ✅ Obtener paciente logueado
+      const paciente = getPacienteLogueado();
+      if (!paciente) {
+        toast.error('No se pudo identificar al paciente');
+        throw new Error('Paciente no identificado');
+      }
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Crear nuevo turno con datos del formulario
       const medicoSeleccionado = medicos.find(med => med.id === turnoData.medicoId);
       const nuevoTurno = {
         id: 'turno-' + Date.now(),
+        pacienteId: paciente.id, // ✅ Asociar al paciente
+        pacienteNombre: `${paciente.nombre} ${paciente.apellido}`, // ✅ Nombre del paciente
+        medicoId: turnoData.medicoId,
         medicoNombre: medicoSeleccionado ? `Dr. ${medicoSeleccionado.nombre} ${medicoSeleccionado.apellido}` : 'Médico',
         especialidad: turnoData.especialidad,
         fecha: turnoData.fecha,
@@ -107,7 +126,7 @@ export const useTurnosPaciente = () => {
         createdAt: new Date().toISOString().split('T')[0]
       };
       
-      // Guardar en localStorage
+      // ✅ Guardar en localStorage
       const turnosExistentes = JSON.parse(localStorage.getItem('turnosPaciente') || '[]');
       const turnosActualizados = [...turnosExistentes, nuevoTurno];
       localStorage.setItem('turnosPaciente', JSON.stringify(turnosActualizados));
@@ -131,17 +150,25 @@ export const useTurnosPaciente = () => {
   const cancelarTurno = async (turnoId) => {
     setLoading(true);
     try {
+      // ✅ Obtener paciente logueado para verificación
+      const paciente = getPacienteLogueado();
+      if (!paciente) {
+        toast.error('No se pudo identificar al paciente');
+        throw new Error('Paciente no identificado');
+      }
+
       await mockService.cancelarTurno(turnoId);
       
-      // Actualizar estado localmente
       const turnosExistentes = JSON.parse(localStorage.getItem('turnosPaciente') || '[]');
       const turnosActualizados = turnosExistentes.map(turno => 
-        turno.id === turnoId 
+        turno.id === turnoId && turno.pacienteId === paciente.id // ✅ Verificar que el turno pertenece al paciente
           ? { ...turno, estado: 'cancelado' }
           : turno
       );
       
       localStorage.setItem('turnosPaciente', JSON.stringify(turnosActualizados));
+      
+      toast.success('Turno cancelado. Se notificó al administrador.');
       
       return { success: true };
     } catch (error) {
@@ -149,6 +176,20 @@ export const useTurnosPaciente = () => {
       throw error;
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ Función para obtener solo los turnos del paciente logueado
+  const getTurnosDelPaciente = () => {
+    try {
+      const paciente = getPacienteLogueado();
+      if (!paciente) return [];
+      
+      const todosLosTurnos = JSON.parse(localStorage.getItem('turnosPaciente') || '[]');
+      return todosLosTurnos.filter(turno => turno.pacienteId === paciente.id);
+    } catch (error) {
+      console.error('Error al obtener turnos del paciente:', error);
+      return [];
     }
   };
 
@@ -161,6 +202,7 @@ export const useTurnosPaciente = () => {
     getEspecialidades,
     getHorariosDisponibles,
     solicitarTurno,
-    cancelarTurno
+    cancelarTurno,
+    getTurnosDelPaciente // ✅ Exportar la nueva función
   };
 };

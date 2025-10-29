@@ -1,15 +1,14 @@
-// src/features/paciente/pages/TurnosPaciente.jsx
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaCalendar, FaTimes, FaEye, FaArrowLeft, FaFilter } from 'react-icons/fa';
-import { toast } from 'react-toastify';
-import { useTurnosPaciente } from '../hooks/useTurnosPaciente';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaArrowLeft, FaCalendar, FaFilter, FaEye, FaTimes } from "react-icons/fa";
+import { useTurnosPaciente } from "../hooks/useTurnosPaciente";
 
 const TurnosPaciente = () => {
   const [turnos, setTurnos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filtro, setFiltro] = useState('todos');
-  const { cancelarTurno } = useTurnosPaciente();
+  const { cancelarTurno, getTurnosDelPaciente } = useTurnosPaciente(); // ✅ Agregar getTurnosDelPaciente
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,15 +17,19 @@ const TurnosPaciente = () => {
 
   const loadTurnos = async () => {
     try {
-      // Usar datos de localStorage
-      const turnosGuardados = localStorage.getItem('turnosPaciente');
-      if (turnosGuardados) {
-        setTurnos(JSON.parse(turnosGuardados));
-      } else {
-        // Datos de ejemplo si no hay turnos guardados
+      setLoading(true);
+      
+      // ✅ Usar la nueva función que filtra por paciente
+      const turnosDelPaciente = getTurnosDelPaciente();
+      
+      if (turnosDelPaciente.length === 0) {
+        // Datos de ejemplo solo si el paciente no tiene turnos
+        const pacienteData = JSON.parse(localStorage.getItem('pacienteData') || '{}');
         const turnosEjemplo = [
           {
             id: 'turno-ejemplo-1',
+            pacienteId: pacienteData.id, // ✅ Asociar al paciente actual
+            pacienteNombre: `${pacienteData.nombre} ${pacienteData.apellido}`,
             medicoNombre: 'Juan Pérez',
             especialidad: 'Cardiología',
             fecha: '2024-12-15',
@@ -34,20 +37,12 @@ const TurnosPaciente = () => {
             motivo: 'Control cardíaco rutinario',
             estado: 'pendiente',
             createdAt: '2024-11-28'
-          },
-          {
-            id: 'turno-ejemplo-2',
-            medicoNombre: 'María García',
-            especialidad: 'Dermatología',
-            fecha: '2024-12-20',
-            hora: '15:30',
-            motivo: 'Consulta por manchas en la piel',
-            estado: 'aprobado',
-            createdAt: '2024-11-25'
           }
         ];
         setTurnos(turnosEjemplo);
         localStorage.setItem('turnosPaciente', JSON.stringify(turnosEjemplo));
+      } else {
+        setTurnos(turnosDelPaciente);
       }
     } catch (error) {
       toast.error('Error al cargar los turnos');

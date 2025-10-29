@@ -3,24 +3,40 @@ export const mockPacienteService = {
   register: async (pacienteData) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // ✅ Generar ID único para cada paciente registrado
+    const pacienteId = 'paciente-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    
     return {
       success: true,
       message: 'Registro exitoso. Espera la aprobación del administrador.',
-      paciente: { id: 'mock-' + Date.now(), ...pacienteData }
+      paciente: { 
+        id: pacienteId, 
+        ...pacienteData,
+        estado: 'pendiente' // Agregar estado de aprobación
+      }
     };
   },
 
   login: async (credentials) => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // ✅ Generar ID único basado en el email para consistencia entre logins
+    // Usamos una versión simple sin Buffer para compatibilidad
+    const emailHash = btoa(credentials.email).replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+    const pacienteId = 'paciente-' + emailHash;
+    
     return {
       success: true,
       token: 'mock-token-' + Date.now(),
       paciente: {
-        id: 'mock-123',
+        id: pacienteId, // ✅ ID único por paciente (mismo email = mismo ID)
         nombre: credentials.email.split('@')[0],
         apellido: 'Paciente',
-        email: credentials.email
+        email: credentials.email,
+        estado: 'aprobado', // Simular que está aprobado
+        telefono: '123-456-7890', // Datos adicionales para consistencia
+        dni: '12345678',
+        fechaNacimiento: '1990-01-01'
       }
     };
   },
@@ -28,6 +44,7 @@ export const mockPacienteService = {
   getTurnos: async () => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
+    // ✅ Estos son solo datos de ejemplo, la app usará localStorage
     return [
       {
         id: 'turno-1',
