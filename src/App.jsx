@@ -1,35 +1,61 @@
-import { Routes, Route } from "react-router-dom";
-import { DataProvider } from "./context/DataContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import LoginPaciente from "./pages/Login/LoginPaciente";
-import DashboardPaciente from "./pages/Dashboard/DashboardPaciente";
-import DashboardAdmin from "./pages/Dashboard/DashboardAdmin";
+// App.jsx (ejemplo de configuración)
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function App() {
+// Paciente Pages
+import LoginPaciente from './features/paciente/pages/LoginPaciente';
+import RegisterPaciente from './features/paciente/pages/RegisterPaciente';
+import DashboardPaciente from './features/paciente/pages/DashboardPaciente';
+import SolicitarTurno from './features/paciente/pages/SolicitarTurno';
+import TurnosPaciente from './features/paciente/pages/TurnosPaciente';
+
+// Components
+import ProtectedRoute from './components/ProtectedRoute';
+
+
+function App() {
   return (
-    <DataProvider>
-      <Routes>
-        <Route path="/" element={<LoginPaciente />} />
-        <Route path="/LoginPaciente" element={<LoginPaciente />} />
-
-        <Route
-          path="/DashboardPaciente"
-          element={
-            <ProtectedRoute role="paciente">
-              <DashboardPaciente />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/DashboardAdmin"
-          element={
-            <ProtectedRoute role="admin">
-              <DashboardAdmin />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </DataProvider>
+    <Router>
+      <div className="App">
+        <Routes>
+          {/* Rutas públicas paciente */}
+          <Route path="/paciente/login" element={<LoginPaciente />} />
+          <Route path="/paciente/register" element={<RegisterPaciente />} />
+          
+          {/* Rutas protegidas paciente */}
+          <Route 
+            path="/paciente/dashboard" 
+            element={
+              <ProtectedRoute>
+                <DashboardPaciente />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/paciente/solicitar-turno" 
+            element={
+              <ProtectedRoute>
+                <SolicitarTurno />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/paciente/turnos" 
+            element={
+              <ProtectedRoute>
+                <TurnosPaciente />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Ruta por defecto */}
+          <Route path="/" element={<LoginPaciente />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
+
+export default App; // ✅ ESTA LÍNEA ES CRÍTICA
