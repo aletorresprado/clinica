@@ -1,44 +1,5 @@
 import { MapPin, Phone, Clock, Star, Calendar, Cross, GraduationCap } from 'lucide-react';
 
-const doctores = [
-    {
-      nombre: "Dr. Julio González",
-      especialidad: "Cardiología",
-      imagen: "https://cdn.pixabay.com/photo/2023/12/21/06/23/doctor-8461303_1280.jpg",
-      rating: 4.5,
-      reviews: 58,
-      experiencia: "15 años de experiencia",
-      educacion: "Universidad de Buenos Aires",
-      telefono: "+54 2966 123-456",
-      agenda: "Lun, Mié, Vie: 14:00 - 20:00",
-      especializaciones: ["Ecocardiografía"]
-    },
-    {
-      nombre: "Dra. María López",
-      especialidad: "Pediatría",
-      imagen: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800&q=80",
-      rating: 4.8,
-      reviews: 127,
-      experiencia: "12 años de experiencia",
-      educacion: "Universidad Nacional de La Plata",
-      telefono: "+54 2966 789-012",
-      agenda: "Mar, Jue: 09:00 - 17:00",
-      especializaciones: ["Neonatología", "Vacunación"]
-    },
-    {
-      nombre: "Dr. Carlos Ruiz",
-      especialidad: "Traumatología",
-      imagen: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80",
-      rating: 4.7,
-      reviews: 94,
-      experiencia: "20 años de experiencia",
-      educacion: "Universidad de Córdoba",
-      telefono: "+54 2966 345-678",
-      agenda: "Lun, Mié, Vie: 10:00 - 18:00",
-      especializaciones: ["Cirugía Ortopédica"]
-    }
-  ];
-
 function Card({doctor}) {
   return (
     <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300">
@@ -124,7 +85,50 @@ function Card({doctor}) {
 
 export default Card;
 
-{* export default function DoctorsPage() {
+{/* Uso de las cards en la página
+
+import Card from '../components/Card';
+
+const doctores = [
+    {
+      nombre: "Dr. Julio González",
+      especialidad: "Cardiología",
+      imagen: "https://cdn.pixabay.com/photo/2023/12/21/06/23/doctor-8461303_1280.jpg",
+      rating: 4.5,
+      reviews: 58,
+      experiencia: "15 años de experiencia",
+      educacion: "Universidad de Buenos Aires",
+      telefono: "+54 2966 123-456",
+      agenda: "Lun, Mié, Vie: 14:00 - 20:00",
+      especializaciones: ["Ecocardiografía"]
+    },
+    {
+      nombre: "Dra. María López",
+      especialidad: "Pediatría",
+      imagen: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=800&q=80",
+      rating: 4.8,
+      reviews: 127,
+      experiencia: "12 años de experiencia",
+      educacion: "Universidad Nacional de La Plata",
+      telefono: "+54 2966 789-012",
+      agenda: "Mar, Jue: 09:00 - 17:00",
+      especializaciones: ["Nutrición", "Vacunación"]
+    },
+    {
+      nombre: "Dr. Carlos Ruiz",
+      especialidad: "Traumatología",
+      imagen: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80",
+      rating: 4.7,
+      reviews: 94,
+      experiencia: "20 años de experiencia",
+      educacion: "Universidad de Córdoba",
+      telefono: "+54 2966 345-678",
+      agenda: "Lun, Mié, Vie: 10:00 - 18:00",
+      especializaciones: ["Cirugía Ortopédica"]
+    }
+  ];
+  
+  function Doctores() {
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -140,3 +144,4 @@ export default Card;
     </div>
   );
 }
+*/}
