@@ -2,20 +2,29 @@ import { Facebook, Instagram, Mail, Phone, } from "lucide-react";
 
 export default function Footer() {
 return (
-    <footer className="bg-green-300 text-gray-100 py-10 mt-10">
+    <footer className="bg-emerald-200 text-gray-800 py-10 mt-10">
     <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+        {/* Logo de la clínica */}
+        <img
+            src="/logo-clinica.png"
+            alt="Logo Clínica San Miguel"
+            className="w-32 mx-auto mb-4"
+        />
+
+        </div>
         {/* Info de la clínica */}
         <div>
-        <h2 className="text-2xl font-bold mb-3  footer-title">Clínica San Miguel</h2>
-        <p className="text-sm text-green-600  font-bold mb-4">
+        <h2 className="text-2xl font-bold mb-3  text-rose-600 footer-title">Clínica San Miguel</h2>
+        <p className="text-sm text-emerald-800  font-bold mb-4">
             Cuidamos tu bienestar con atención profesional y personalizada.
         </p>
         </div>
 
         {/*  Contacto */}
             <div>
-            <h3 className="text-xl font-semibold mb-3 text-green-600">Contacto</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="text-xl font-semibold mb-3 text-rose-600 ">Contacto</h3>
+            <ul className="space-y-2 text-sm text-emerald-800">
                 <li className="flex items-center gap-2  font-bold">
                 <Phone size={16} /> +54 9 299 123 4567
                 </li>
@@ -36,7 +45,7 @@ return (
 
             {/*  Redes sociales */}
         <div className="flex flex-col items-center">
-        <h3 className="text-xl font-semibold mb-3 text-center text-green-600">Seguinos</h3>
+        <h3 className="text-xl font-semibold mb-3 text-center text-rose-600">Seguinos</h3>
         <div className="flex gap-4">
             <a
             href="#"
@@ -54,7 +63,7 @@ return (
         </div>
     </div>
 
-    <div className="text-center text-gray-400 text-sm  font-bold mt-10 border-t border-gray-700 pt-4">
+    <div className="text-center text-gray-800 text-sm  font-bold mt-10 border-t border-gray-700 pt-4">
         © {new Date().getFullYear()} Clínica San Miguel, Todos los derechos
         reservados.
     </div>
