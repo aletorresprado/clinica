@@ -85,7 +85,7 @@ export default function DashboardPaciente() {
         </div>
       </div>
 
-      <section className="bg-white p-4 rounded shadow">
+      <section className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl shadow-lg border border-red-100">
         <h3 className="font-semibold mb-3">Solicitar turno</h3>
         <form onSubmit={handleSolicitar} className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Select
@@ -127,3 +127,4 @@ export default function DashboardPaciente() {
       </section>
     </div>
   );
+}

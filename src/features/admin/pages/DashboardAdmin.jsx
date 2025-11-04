@@ -42,6 +42,7 @@ export default function DashboardAdmin() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Panel Administrador</h2>
          <Button onClick={() => { logout(); push('Sesion cerrada'); navigate('/admin/login'); }}>Cerrar sesión</Button>
+         
       </div>
 
       <section className="bg-white p-4 rounded shadow">
