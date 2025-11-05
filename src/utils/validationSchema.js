@@ -17,3 +17,20 @@ export const registerSchema = z
     path: ["confirmPassword"],
 });
 
+export const adminLoginSchema = z.object({
+  email: z.string().email({ message: "Email inválido" }),
+  password: z.string().min(4, { message: "La contraseña debe tener al menos 4 caracteres" }),
+});
+
+export const adminRegisterSchema = z
+  .object({
+    username: z.string().min(3, { message: 'El nombre debe tener al menos 3 caracteres' }),
+    email: z.string().email({ message: 'Email inválido' }),
+    password: z.string().min(4, { message: 'La contraseña debe tener al menos 4 caracteres' }),
+    confirmPassword: z.string()
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword']
+  })
+

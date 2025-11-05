@@ -6,6 +6,10 @@ import  Dashboard  from './pages/Dashboard';
 import  Register from './pages/Register';
 import 	ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
+import AdminLogin from './pages/AdminLogin'
+import AdminRegister from './pages/AdminRegister'
+import AdminDashboard from './pages/AdminDashboard'
+import AdminProtectedRoute from './components/AdminProtectedRoute'
 	
 	function App() {
 		const isAuthenticated = Boolean(localStorage.getItem('user'));
@@ -39,6 +43,17 @@ import Home from './pages/Home';
 					</ProtectedRoute>
 				}
 				/>
+				<Route path="/admin" element={<AdminLogin />} />
+<Route path="/admin/register" element={<AdminRegister />} />
+
+<Route
+  path="/admin/dashboard"
+  element={
+    <AdminProtectedRoute>
+      <AdminDashboard />
+    </AdminProtectedRoute>
+  }
+/>
 
 				<Route
 				path='/'
