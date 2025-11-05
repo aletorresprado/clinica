@@ -1,13 +1,54 @@
-const App = () => {
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import  Login  from './pages/Login';
+import  Dashboard  from './pages/Dashboard';
+import  Register from './pages/Register';
+import 	ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+	
+	function App() {
+		const isAuthenticated = Boolean(localStorage.getItem('user'));
+
 	return (
-		<div className="min-h-screen flex flex-col bg-black text-white/95 items-center justify-center text-2xl font-bold text-center">
-			<img
-				className="size-40"
-				src="https://res.cloudinary.com/dltj8bim0/image/upload/v1761060580/logo_kukwt0.png"
-				alt=""
-			/>
-			<p>Hello Vite + React + TailwindCSS!</p>
-		</div>
+		<Router>
+				<div className='App'>
+			<Routes>
+				<Route path="/login" 
+				element={isAuthenticated ? <Navigate to="/home" replace/> : <Login/>}
+				/>
+				<Route path="/register" 
+				element={isAuthenticated ? <Navigate to="/home" replace/> : <Register/>}
+				/>
+				
+				<Route 
+				path="/home" 
+				element={
+					<ProtectedRoute>
+						<Home/>
+						
+					</ProtectedRoute>
+				}
+				/>
+				<Route 
+				path="/dashboard" 
+				element={
+					<ProtectedRoute>
+						<Dashboard/>
+						
+					</ProtectedRoute>
+				}
+				/>
+
+				<Route
+				path='/'
+				element= {<Navigate to ="/login" replace/>}
+				/>				
+				</Routes>
+					<ToastContainer position='bottom-right'/>
+				</div>
+
+		</Router>
 	);
 };
 
