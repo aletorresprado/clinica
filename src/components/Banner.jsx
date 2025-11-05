@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 const imagenes = [
-  "/Imagenes/clinica1.jpg",
-  "/Imagenes/clinica2.jpg",
-  "/Imagenes/clinica3.jpg",
+  "/images/img-clinica1.jpg",
+  "/images/img-clinica2.jpeg",
+  "/images/img-clinica3.ppg",
 ];
 
 const Banner = () => {
