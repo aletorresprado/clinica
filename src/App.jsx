@@ -1,14 +1,22 @@
 import React from "react";
 import Banner from "./components/Banner";
 import Footer from "./components/Footer";
+import { BrowserRouter as Router } from "react-router-dom"
+import Navbar from "./components/Navbar"
+import Contacto from "./components/Contacto";
 
 function App() {
-  return (
-    <>
-      <Banner />
-      <Footer />
-    </>
+  	return (
+		<>
+			<Router>
+				<Navbar />
+      			<Banner />
+				<Contacto />
+      			<Footer />
+			</Router>
+    	</>
   );
 }
 
 export default App;
+git
