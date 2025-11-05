@@ -2,7 +2,7 @@ import { Facebook, Instagram, Mail, Phone, } from "lucide-react";
 
 export default function Footer() {
 return (
-    <footer className="bg-red-200 text-600 py-10 mt-10">
+    <footer className="dark:bg-gray-800 text-ski-100  py-10 mt-10">
     <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
         {/* Logo de la clínica */}

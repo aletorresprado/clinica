@@ -1,27 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-export default function Banner() {
+const imagenes = [
+  "/Imagenes/clinica1.jpg",
+  "/Imagenes/clinica2.jpg",
+  "/Imagenes/clinica3.jpg",
+];
+
+const Banner = () => {
+  const [indice, setIndice] = useState(0);
+
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setIndice((prev) => (prev + 1) % imagenes.length);
+    }, 5000);
+    return () => clearInterval(intervalo);
+  }, []);
+
   return (
-    <section className="relative w-full h-[450px] md:h-[550px] flex items-center overflow-hidden rounded-b-2xl">
-      <img
-        src="/banner-clinica.jpg" 
-        alt="Clínica San Miguel banner"
-        className="absolute inset-0 w-full h-full object-cover brightness-75"
-      />
-      {/* Capa de color translúcido con los colores del footer */}
-      <div className="absolute inset-0 bg-emerald-900/50"></div>
-      <div className="relative z-10 max-w-4xl px-8 md:px-16 text-white">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-md">
+    <section className="relative h-[500px] overflow-hidden">
+      {/* Imagen de fondo con transición */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
+        style={{
+          backgroundImage: `url(${imagenes[indice]})`,
+        }}
+      ></div>
+
+      {/* Capa de color encima para oscurecer */}
+      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+      {/* Contenido centrado */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Clínica San Miguel - Portal del Paciente
         </h1>
-        <p className="text-lg md:text-xl text-gray-100 font-medium mb-8 leading-relaxed max-w-2xl">
-          Llevamos la atención médica al siguiente nivel.
-          Accedé a tus estudios y turnos desde cualquier lugar, con total seguridad y confianza.
+        <p className="text-lg mb-6 max-w-2xl">
+          Accedé a tus estudios y turnos desde cualquier lugar, con total
+          seguridad y confianza.
         </p>
-        <button className="bg-red-400 hover:bg-red-500 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition duration-300">
+        <button className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg shadow-md">
           Acceder
         </button>
       </div>
+
+      {/* Indicadores (puntos) */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        {imagenes.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndice(i)}
+            className={`w-3 h-3 rounded-full ${
+              i === indice ? "bg-red-500" : "bg-white/70"
+            }`}
+          ></button>
+        ))}
+      </div>
     </section>
-    );
-}
+  );
+};
+
+export default Banner;
