@@ -1,8 +1,6 @@
 import React from "react";
-import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar"
-import Contacto from "./components/Contacto";
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,65 +13,63 @@ import AdminLogin from './pages/AdminLogin'
 import AdminRegister from './pages/AdminRegister'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
+import Entrada from "./components/Entrada";
 
 
 
-	
 	function App() {
 		const isAuthenticated = Boolean(localStorage.getItem('user'));
+
 
 	return (
 
 
 			<Router>
 				<Navbar />
-      			<Banner />
-				<Contacto />
 
-	<div className='App'>
-			<Routes>
-				<Route path="/login" 
-				element={isAuthenticated ? <Navigate to="/home" replace/> : <Login/>}
-				/>
-				<Route path="/register" 
+				<div className='App'>
+				<Routes>
+					<Route path="/entrada" element={<Entrada />} />
+					<Route path="/login" 
+					element={isAuthenticated ? <Navigate to="/home" replace/> : <Login/>}
+					/>
+					<Route path="/register" 
 				element={isAuthenticated ? <Navigate to="/home" replace/> : <Register/>}
 				/>
 				
-				<Route 
-				path="/home" 
+					<Route 
+				path="/home"
 				element={
 					<ProtectedRoute>
 						<Home/>
-						
 					</ProtectedRoute>
 				}
 				/>
-				<Route 
+					<Route 
 				path="/dashboard" 
 				element={
 					<ProtectedRoute>
 						<Dashboard/>
-						
 					</ProtectedRoute>
 				}
 				/>
-				<Route path="/admin" element={<AdminLogin />} />
-<Route path="/admin/register" element={<AdminRegister />} />
+					<Route path="/admin" element={<AdminLogin />} />
+					<Route path="/admin/register" element={<AdminRegister />} />
 
-<Route
-  path="/admin/dashboard"
-  element={
-    <AdminProtectedRoute>
-      <AdminDashboard />
-    </AdminProtectedRoute>
-  }
-/>
+					<Route
+  					path="/admin/dashboard"
+  					element={
+    					<AdminProtectedRoute>
+      					<AdminDashboard />
+    					</AdminProtectedRoute>
+  					}
+					/>
 
-				<Route
-				path='/'
-				element= {<Navigate to ="/login" replace/>}
-				/>				
-				</Routes>
+					<Route
+					path='/'
+					element= {<Navigate to ="/login" replace/>}
+					/>
+					</Routes>
 					<ToastContainer position='bottom-right'/>
 				</div>
 
@@ -82,5 +78,4 @@ import AdminProtectedRoute from './components/AdminProtectedRoute'
     	
   );
 }
-
 export default App
