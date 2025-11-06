@@ -24,7 +24,7 @@ const infoContacto = [
 
 const Contacto = () => {
   return (
-    <section className="container mx-auto p-4 md:p-8">
+    <section className="container mx-auto p-4 md:p-8" id='contacto acerca'>
       <h1 className="text-4xl font-extrabold text-blue-400 mb-10 text-center">
         Contacto y Ubicación
       </h1>

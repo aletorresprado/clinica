@@ -16,7 +16,7 @@ function Navbar() {
                     <Link to="/login" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Iniciar Sesión</Link>
                     <Link to="/register" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Registro</Link>
                     <Link to="#profecionales" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Profesionales</Link>
-                    <Link to="/Clinica-SanMiguel" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Acerca de</Link>
+                    <Link to="#acerca" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Acerca de</Link>
                     <Link to="#contacto" className="mx-3 font-bold text-blue-400 hover:text-sky-600">Contacto</Link>
                 </nav>
                 <button 
@@ -46,7 +46,7 @@ function Navbar() {
                         <li className="mb-2"><Link to="/login" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Iniciar Sesión</Link></li> 
                         <li className="mb-2"><Link to="/register" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Registro</Link></li>
                         <li className="mb-2"><Link to="#profecionales" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Profesionales</Link></li>
-                        <li className="mb-2"><Link to="/Clinica-SanMiguel" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Acerca de</Link></li>
+                        <li className="mb-2"><Link to="#acerca" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Acerca de</Link></li>
                         <li className="mb-2"><Link to="#contacto" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Contacto</Link></li>
                     </ul>
                 </div>

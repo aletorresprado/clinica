@@ -13,7 +13,7 @@ import AdminLogin from './pages/AdminLogin'
 import AdminRegister from './pages/AdminRegister'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
-import Entrada from "./components/Entrada";
+import Entrada from "./pages/Entrada";
 
 
 
@@ -67,7 +67,7 @@ import Entrada from "./components/Entrada";
 
 					<Route
 					path='/'
-					element= {<Navigate to ="/login" replace/>}
+					element= {<Navigate to ="/entrada" replace/>}
 					/>
 					</Routes>
 					<ToastContainer position='bottom-right'/>
