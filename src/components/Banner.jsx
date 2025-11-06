@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 
 const imagenes = [
   "/images/img-clinica1.jpg",
-  "/images/img-clinica2.jpeg",
-  "/images/img-clinica3.ppg",
+  "/images/img-clinica2.webp",
+  "/images/img-clinica4.png",
 ];
 
 const Banner = () => {
@@ -27,14 +27,14 @@ const Banner = () => {
       ></div>
 
       {/* Capa de color encima para oscurecer */}
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+      <div className="absolute inset-0 bg-opacity-40"></div>
 
       {/* Contenido centrado */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-400  text-center px-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Clínica San Miguel - Portal del Paciente
         </h1>
-        <p className="text-lg mb-6 max-w-2xl">
+        <p className="text-lg mb-6 text-400 max-w-2xl">
           Accedé a tus estudios y turnos desde cualquier lugar, con total
           seguridad y confianza.
         </p>
@@ -58,5 +58,6 @@ const Banner = () => {
     </section>
   );
 };
+
 
 export default Banner;
