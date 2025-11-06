@@ -12,8 +12,8 @@ function App() {
 			<Router>
 				<Navbar />
       			<Banner />
-				<Profesionales />
 				<Contacto />
+				<Profesionales />
       			<Footer />
 			</Router>
     	</>
@@ -21,4 +21,3 @@ function App() {
 }
 
 export default App;
-git
