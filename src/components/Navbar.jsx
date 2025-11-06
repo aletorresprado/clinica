@@ -45,7 +45,7 @@ function Navbar() {
                     <ul className='flex flex-col items-center'>
                         <li className="mb-2"><Link to="/login" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Iniciar Sesión</Link></li> 
                         <li className="mb-2"><Link to="/register" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Registro</Link></li>
-                        <li className="mb-2"><Link to="#profecionales" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Profesionales</Link></li>
+                        <li className="mb-2"><Link to="/entrada#profecionales" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Profesionales</Link></li>
                         <li className="mb-2"><Link to="#acerca" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Acerca de</Link></li>
                         <li className="mb-2"><Link to="#contacto" className="mx-3 font-bold text-blue-600 hover:text-sky-600">Contacto</Link></li>
                     </ul>
