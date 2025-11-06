@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <header className="relative bg-red-200 shadow-md" id="inicio">
+        <header className="relative dark:bg--600 shadow-md" id="inicio">
             <div className='flex items-center justify-between h-20 px-5'>
                 <div className='flex items-center'>
                     <img src={img} alt="Clinica San Miguel" className="h-14 mr-5" />
