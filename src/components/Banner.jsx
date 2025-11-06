@@ -29,20 +29,6 @@ const Banner = () => {
       {/* Capa de color encima para oscurecer */}
       <div className="absolute inset-0 bg-opacity-40"></div>
 
-      {/* Contenido centrado */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-400  text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Clínica San Miguel - Portal del Paciente
-        </h1>
-        <p className="text-lg mb-6 text-400 max-w-2xl">
-          Accedé a tus estudios y turnos desde cualquier lugar, con total
-          seguridad y confianza.
-        </p>
-        <button className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg shadow-md">
-          Acceder
-        </button>
-      </div>
-
       {/* Indicadores (puntos) */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
         {imagenes.map((_, i) => (
