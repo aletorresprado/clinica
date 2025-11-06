@@ -24,61 +24,15 @@ import AdminProtectedRoute from './components/AdminProtectedRoute'
 
 	return (
 
-		<Router>
+
+			<Router>
 				<Navbar />
       			<Banner />
 				<Contacto />
-      			
-		
-				<div className='App'>
-			<Routes>
-				<Route path="/login" 
-				element={isAuthenticated ? <Navigate to="/home" replace/> : <Login/>}
-				/>
-				<Route path="/register" 
-				element={isAuthenticated ? <Navigate to="/home" replace/> : <Register/>}
-				/>
-				
-				<Route 
-				path="/home" 
-				element={
-					<ProtectedRoute>
-						<Home/>
-						
-					</ProtectedRoute>
-				}
-				/>
-				<Route 
-				path="/dashboard" 
-				element={
-					<ProtectedRoute>
-						<Dashboard/>
-						
-					</ProtectedRoute>
-				}
-				/>
-				<Route path="/admin" element={<AdminLogin />} />
-<Route path="/admin/register" element={<AdminRegister />} />
+      			<Footer />
+			</Router>
+    	</>
+  );
+}
 
-<Route
-  path="/admin/dashboard"
-  element={
-    <AdminProtectedRoute>
-      <AdminDashboard />
-    </AdminProtectedRoute>
-  }
-/>
-
-				<Route
-				path='/'
-				element= {<Navigate to ="/login" replace/>}
-				/>				
-				</Routes>
-					<ToastContainer position='bottom-right'/>
-				</div>
-<Footer />
-		</Router>
-	);
-};
-
-export default App;
+export default App

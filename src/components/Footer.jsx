@@ -2,7 +2,7 @@ import { Facebook, Instagram, Mail, Phone, } from "lucide-react";
 
 export default function Footer() {
 return (
-    <footer className="bg-red-200 text-600 py-10 mt-10">
+    <footer className=" text-ski-100  py-10 mt-10">
     <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
         {/* Logo de la clínica */}
@@ -15,15 +15,15 @@ return (
         </div>
         {/* Info de la clínica */}
         <div>
-        <h2 className="text-2xl font-bold mb-3  text-600 footer-title">Clínica San Miguel</h2>
-        <p className="text-sm text-emerald-800  font-bold mb-4">
+        <h2 className="text-2xl font-bold mb-3 text-red-400 text-600 footer-title">Clínica San Miguel</h2>
+        <p className="text-sm   font-bold mb-4">
             Cuidamos tu bienestar con atención profesional y personalizada.
         </p>
         </div>
 
         {/*  Contacto */}
             <div>
-            <h3 className="text-xl font-semibold mb-3 text-600 ">Contacto</h3>
+            <h3 className="text-xl font-semibold mb-3 text-red-400 text-600 ">Contacto</h3>
             <ul className="space-y-2 text-sm text-800">
                 <li className="flex items-center gap-2  font-bold">
                 <Phone size={16} /> +54 9 299 123 4567
