@@ -36,7 +36,7 @@ const Banner = () => {
             key={i}
             onClick={() => setIndice(i)}
             className={`w-3 h-3 rounded-full ${
-              i === indice ? "bg-red-500" : "bg-white/70"
+              i === indice ? "bg-blue-500" : "bg-white/70"
             }`}
           ></button>
         ))}
