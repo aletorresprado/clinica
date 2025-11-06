@@ -90,7 +90,7 @@ function AdminDashboard() {
                             ? 'bg-yellow-100 text-yellow-700'
                             : t.estado === 'aprobado'
                             ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
+                            : 'bg-blue-100 text-blue-700'
                         }`}
                       >
                         {t.estado}
@@ -106,7 +106,7 @@ function AdminDashboard() {
                           </button>
                           <button
                             onClick={() => actualizarTurno(t.id, 'rechazado')}
-                            className="bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1 px-3 rounded-md"
+                            className="bg-red-600 hover:bg-blue-700 text-white text-xs font-medium py-1 px-3 rounded-md"
                           >
                             Rechazar
                           </button>

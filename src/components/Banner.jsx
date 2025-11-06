@@ -38,7 +38,7 @@ const Banner = () => {
           Accedé a tus estudios y turnos desde cualquier lugar, con total
           seguridad y confianza.
         </p>
-        <button className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg shadow-md">
+        <button className="bg-blue-200 hover:bg-blue-600 px-6 py-2 rounded-lg shadow-md">
           Acceder
         </button>
       </div>
@@ -50,7 +50,7 @@ const Banner = () => {
             key={i}
             onClick={() => setIndice(i)}
             className={`w-3 h-3 rounded-full ${
-              i === indice ? "bg-red-500" : "bg-white/70"
+              i === indice ? "bg-blue-500" : "bg-white/70"
             }`}
           ></button>
         ))}

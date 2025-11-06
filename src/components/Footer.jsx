@@ -15,7 +15,7 @@ return (
         </div>
         {/* Info de la clínica */}
         <div>
-        <h2 className="text-2xl font-bold mb-3 text-red-400 text-600 footer-title">Clínica San Miguel</h2>
+        <h2 className="text-2xl font-bold mb-3 text-blue-400 text-600 footer-title">Clínica San Miguel</h2>
         <p className="text-sm   font-bold mb-4">
             Cuidamos tu bienestar con atención profesional y personalizada.
         </p>
@@ -23,7 +23,7 @@ return (
 
         {/*  Contacto */}
             <div>
-            <h3 className="text-xl font-semibold mb-3 text-red-400 text-600 ">Contacto</h3>
+            <h3 className="text-xl font-semibold mb-3 text-blue-400 text-600 ">Contacto</h3>
             <ul className="space-y-2 text-sm text-800">
                 <li className="flex items-center gap-2  font-bold">
                 <Phone size={16} /> +54 9 299 123 4567

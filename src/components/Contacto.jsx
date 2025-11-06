@@ -25,7 +25,7 @@ const infoContacto = [
 const Contacto = () => {
   return (
     <section className="container mx-auto p-4 md:p-8">
-      <h1 className="text-4xl font-extrabold text-red-700 mb-10 text-center">
+      <h1 className="text-4xl font-extrabold text-blue-400 mb-10 text-center">
         Contacto y Ubicación
       </h1>
 
@@ -46,8 +46,8 @@ const Contacto = () => {
         </div>
 
         {/* Datos de contacto */}
-        <div className="bg-red-50 rounded-xl shadow-lg p-8 border-l-4 border-red-500">
-          <h2 className="text-3xl font-semibold text-red-600 mb-6 border-b pb-2">
+        <div className="bg-red-50 rounded-xl shadow-lg p-8 border-l-4 border--blue">
+          <h2 className="text-3xl font-semibold text-blue-500 mb-6 border-b pb-2">
             Datos de Contacto
           </h2>
           <div className="space-y-6">
@@ -55,7 +55,7 @@ const Contacto = () => {
               <div key={item.id} className="flex items-start space-x-4">
                 <div className="text-3xl">{item.icono}</div>
                 <div>
-                  <h3 className="text-xl font-bold text-red-700">{item.titulo}</h3>
+                  <h3 className="text-xl font-bold text-blue-500">{item.titulo}</h3>
                   <p className="text-gray-700">{item.contenido}</p>
                 </div>
               </div>
@@ -66,7 +66,7 @@ const Contacto = () => {
 
       {/* Especialidades */}
       <div className="p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-red-600 mb-4 border-b pb-2">
+        <h2 className="text-3xl font-semibold text-blue-500 mb-4 border-b pb-2">
           Nuestras Especialidades
         </h2>
         <p className="text-gray-700 leading-relaxed">
