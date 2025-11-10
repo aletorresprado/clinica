@@ -14,12 +14,15 @@ import AdminRegister from './pages/AdminRegister'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminProtectedRoute from './components/AdminProtectedRoute'
 import Entrada from "./pages/Entrada";
-
+import ProfLogin from "./pages/ProfLogin";
+import ProfRegister from "./pages/ProfRegister";
+import ProfDashboard from "./pages/ProfDashboard";
+import ProfProtectedRoute from "./components/ProfProtectedRoute";
 
 
 	function App() {
 		const isAuthenticated = Boolean(localStorage.getItem('user'));
-
+		const isProfAuthenticated = Boolean(localStorage.getItem("profEmail"));
 
 	return (
 
@@ -69,6 +72,33 @@ import Entrada from "./pages/Entrada";
 					path='/'
 					element= {<Navigate to ="/entrada" replace/>}
 					/>
+					<Route 
+  path="/proflogin" 
+  element={
+    localStorage.getItem('profEmail') 
+      ? <Navigate to="/profdashboard" replace /> 
+      : <ProfLogin />
+  }
+/>
+
+<Route 
+  path="/profregister" 
+  element={
+    localStorage.getItem('profEmail') 
+      ? <Navigate to="/profdashboard" replace /> 
+      : <ProfRegister />
+  }
+/>
+
+<Route 
+  path="/profdashboard" 
+  element={
+    <ProfProtectedRoute>
+      <ProfDashboard />
+    </ProfProtectedRoute>
+  }
+/>
+
 					</Routes>
 					<ToastContainer position='bottom-right'/>
 				</div>
